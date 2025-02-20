@@ -118,7 +118,9 @@ def main():
         print()
         s=input("Do you want to exit the dungeon? (y/n)--> ")
         if s.lower()=="y":
+            print("I'll be waiting your return")
             done=True
+
         else:
             done=False
 
