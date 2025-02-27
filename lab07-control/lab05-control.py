@@ -47,7 +47,7 @@ class Plane:
             (285 + xp - center_x, 200 + yp - center_y),
             (220 + xp - center_x, 160 + yp - center_y),
             (320 + xp - center_x, 200 + yp - center_y)
-        ], arcade.color.DARK_GRAY)
+        ],arcade.color.DARK_GRAY)
 
 class MyGame(arcade.Window):
     def __init__(self, width, height, title):
