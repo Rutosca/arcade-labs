@@ -58,21 +58,22 @@ class MyGame(arcade.Window):
         # Se inicia el avión en el centro de la ventana
         self.plane = Plane(width // 2, height // 2)
         # Variables para almacenar los valores del joystick
-        self.joystick = None
+        self.joystick=None
         self.joystick_x = 0
         self.joystick_y = 0
 
-        # Se obtienen los joysticks conectados
+    def setup(self):# Se obtienen los joysticks conectados
         joysticks = arcade.get_joysticks()
         if joysticks:
             self.joystick = joysticks[0]
             self.joystick.open()
+            print("Joystick detectado")
         else:
             print("There are no joysticks.")
             self.joystick = None
 
     def on_draw(self):
-        self.clear()
+        arcade.start_render()
         self.plane.draw()
 
     def on_mouse_motion(self, x, y, dx, dy):
@@ -91,12 +92,14 @@ class MyGame(arcade.Window):
     def on_update(self, delta_time):
         # Si se usa el joystick, se actualiza la posición del avión.
         if self.joystick:
+            print(self.joystick_x, self.hoystick_y)
             plane_speed = 200  # velocidad en píxeles por segundo
             self.plane.position_x += self.joystick_x * plane_speed * delta_time
             self.plane.position_y += self.joystick_y * plane_speed * delta_time
 
 def main():
     window = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT, "Control de Avión: Ratón y Joystick")
+    window.setup()
     arcade.run()
 
 if __name__ == "__main__":
