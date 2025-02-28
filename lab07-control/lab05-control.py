@@ -16,10 +16,11 @@ else:
     print("No se detectaron joysticks.")
 
 class Plane:
-    def __init__(self, position_x, position_y):
+    def __init__(self, position_x, position_y,color):
         # La posición del avión se define como el centro del fuselaje.
         self.position_x = position_x
         self.position_y = position_y
+        self.color=color
 
     def draw(self):
         # Se define el centro original del dibujo (centro del fuselaje) para reajustarlo.
@@ -45,8 +46,8 @@ class Plane:
                                       380 + xp - center_x, 185 + yp - center_y,
                                       arcade.color.LIGHT_GRAY)
         # Alerón vertical (cola)
-        arcade.draw_triangle_filled(240 + xp - center_x, 200 + yp - center_y,
-                                      200 + xp - center_x, 240 + yp - center_y,
+        arcade.draw_triangle_filled(300 + xp - center_x, 200 + yp - center_y,
+                                      180 + xp - center_x, 240 + yp - center_y,
                                       200 + xp - center_x, 200 + yp - center_y,
                                       arcade.color.LIGHT_GRAY)
         # Alerón horizontal (estabilizador trasero)
@@ -70,7 +71,7 @@ class MyGame(arcade.Window):
         self.set_mouse_visible(False)
         arcade.set_background_color(arcade.color.ELECTRIC_BLUE)
         # Inicializamos el avión en el centro de la ventana.
-        self.plane = Plane(width // 2, height // 2)
+        self.plane = Plane(width // 2, height // 2, arcade.color.GOLD)
 
     def on_draw(self):
         self.clear()
@@ -86,8 +87,9 @@ class MyGame(arcade.Window):
         self.plane.position_x = x
         self.plane.position_y = y
 
+
     def on_update(self, delta_time):
-        # Procesamos los eventos de Pygame para actualizar el estado del joystick.
+        # eventos de Pygame para actualizar el estado del joystick.
         pygame.event.pump()
         if joystick:
             # Se leen los ejes del joystick.
