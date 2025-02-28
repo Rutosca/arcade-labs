@@ -1,7 +1,19 @@
 import arcade
+import pygame
 
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 700
+
+# Inicializamos Pygame y su subsistema de joystick.
+pygame.init()
+pygame.joystick.init()
+joystick = None
+if pygame.joystick.get_count() > 0:
+    joystick = pygame.joystick.Joystick(0)
+    joystick.init()
+    print(f"Joystick detectado: {joystick.get_name()}")
+else:
+    print("No se detectaron joysticks.")
 
 class Plane:
     def __init__(self, position_x, position_y):
@@ -10,7 +22,7 @@ class Plane:
         self.position_y = position_y
 
     def draw(self):
-        # Se define el centro original del dibujo (centro del fuselaje) para reajustarlo
+        # Se define el centro original del dibujo (centro del fuselaje) para reajustarlo.
         center_x = 300
         center_y = 200
         xp = self.position_x
@@ -47,59 +59,57 @@ class Plane:
             (285 + xp - center_x, 200 + yp - center_y),
             (220 + xp - center_x, 160 + yp - center_y),
             (320 + xp - center_x, 200 + yp - center_y)
-        ],arcade.color.DARK_GRAY)
+        ], arcade.color.DARK_GRAY)
+
+
 
 class MyGame(arcade.Window):
     def __init__(self, width, height, title):
         super().__init__(width, height, title)
-        # Se oculta el puntero del ratón
+        # Ocultamos el puntero del ratón.
         self.set_mouse_visible(False)
-        arcade.set_background_color(arcade.color.ASH_GREY)
-        # Se inicia el avión en el centro de la ventana
+        arcade.set_background_color(arcade.color.ELECTRIC_BLUE)
+        # Inicializamos el avión en el centro de la ventana.
         self.plane = Plane(width // 2, height // 2)
-        # Variables para almacenar los valores del joystick
-        self.joystick=None
-        self.joystick_x = 0
-        self.joystick_y = 0
-
-    def setup(self):# Se obtienen los joysticks conectados
-        joysticks = arcade.get_joysticks()
-        if joysticks:
-            self.joystick = joysticks[0]
-            self.joystick.open()
-            print("Joystick detectado")
-        else:
-            print("There are no joysticks.")
-            self.joystick = None
 
     def on_draw(self):
-        arcade.start_render()
+        self.clear()
         self.plane.draw()
+        # Indicador visual de si se detectó el joystick.
+        if joystick:
+            arcade.draw_text("Joystick activo", 10, SCREEN_HEIGHT - 30, arcade.color.GREEN, 20)
+        else:
+            arcade.draw_text("Sin joystick", 10, SCREEN_HEIGHT - 30, arcade.color.RED, 20)
 
     def on_mouse_motion(self, x, y, dx, dy):
-        # Actualiza la posición del avión para que el centro siga al ratón
+        # Permite mover el avión con el ratón si se desea (aunque se puede comentar si se quiere solo joystick).
         self.plane.position_x = x
         self.plane.position_y = y
 
-    def on_joyaxis_motion(self, joystick, axis, value):
-        # Se actualizan los valores del joystick
-        # Eje 0: horizontal, Eje 1: vertical (pueden variar según el mando)
-        if axis == 0:
-            self.joystick_x = value
-        elif axis == 1:
-            self.joystick_y = value
-
     def on_update(self, delta_time):
-        # Si se usa el joystick, se actualiza la posición del avión.
-        if self.joystick:
-            print(self.joystick_x, self.hoystick_y)
-            plane_speed = 200  # velocidad en píxeles por segundo
-            self.plane.position_x += self.joystick_x * plane_speed * delta_time
-            self.plane.position_y += self.joystick_y * plane_speed * delta_time
+        # Procesamos los eventos de Pygame para actualizar el estado del joystick.
+        pygame.event.pump()
+        if joystick:
+            # Se leen los ejes del joystick.
+            x_axis = joystick.get_axis(0)
+            y_axis = joystick.get_axis(1)
+            plane_speed = 1000  # Velocidad en píxeles por segundo.
+            # Actualizamos la posición del avión.
+            self.plane.position_x += x_axis * plane_speed * delta_time
+            while self.plane.position_x<-200:
+                self.plane.position_x=1200
+            while self.plane.position_x>1200:
+                self.plane.position_x=-200
+            while self.plane.position_y < -100:
+                self.plane.position_y = 800
+            while self.plane.position_y > 800:
+                self.plane.position_y = -100
+            # Normalmente el eje Y está invertido, así que usamos -y_axis.
+            self.plane.position_y += -y_axis * plane_speed * delta_time
+
 
 def main():
-    window = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT, "Control de Avión: Ratón y Joystick")
-    window.setup()
+    window = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT, "Avión controlado con Joystick (Pygame + Arcade)")
     arcade.run()
 
 if __name__ == "__main__":
