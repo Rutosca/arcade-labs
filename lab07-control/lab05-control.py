@@ -98,6 +98,9 @@ class MyGame(arcade.Window):
             plane_speed = 1000  # Velocidad en píxeles por segundo.
             # Actualizamos la posición del avión.
             self.plane.position_x += x_axis * plane_speed * delta_time
+            # Normalmente el eje Y está invertido, así que usamos -y_axis.
+            self.plane.position_y += -y_axis * plane_speed * delta_time
+
             while self.plane.position_x<-200:
                 self.plane.position_x=1200
             while self.plane.position_x>1200:
@@ -106,8 +109,6 @@ class MyGame(arcade.Window):
                 self.plane.position_y = 800
             while self.plane.position_y > 800:
                 self.plane.position_y = -100
-            # Normalmente el eje Y está invertido, así que usamos -y_axis.
-            self.plane.position_y += -y_axis * plane_speed * delta_time
 
 
 def main():
