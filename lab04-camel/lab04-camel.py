@@ -109,7 +109,6 @@ class MyGame(arcade.Window):
                 self.turno_jug = False
                 break
 
-
         self.clicks += 1
 
         #comienzo de la lógica de la IA
