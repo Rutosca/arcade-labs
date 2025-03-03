@@ -38,30 +38,11 @@ class MyGame(arcade.Window):
         self.rect_list=[]
         self.outline=[]
         #añadir los rectángulos a las listas (relleno y contorno)
-        rect=Rectangle(500,350,200,200,self.color_transparente)
-        self.rect_list.append(rect)
-        out=Out_line(500, 350, 200, 200, arcade.color.BLACK, 5)
-        self.outline.append(out)
-
-        rect = Rectangle(700, 300, 200, 100, self.color_transparente)
-        self.rect_list.append(rect)
-        out = Out_line(700, 300, 200, 100, arcade.color.BLACK, 5)
-        self.outline.append(out)
-
-        rect = Rectangle(300, 300, 200, 100, self.color_transparente)
-        self.rect_list.append(rect)
-        out = Out_line(300, 300, 200, 100, arcade.color.BLACK, 5)
-        self.outline.append(out)
-
-        rect = Rectangle(300, 400, 200, 100, self.color_transparente)
-        self.rect_list.append(rect)
-        out = Out_line(300, 400, 200, 100, arcade.color.BLACK, 5)
-        self.outline.append(out)
-
-        rect = Rectangle(700, 400, 200, 100, self.color_transparente)
-        self.rect_list.append(rect)
-        out = Out_line(700, 400, 200, 100, arcade.color.BLACK, 5)
-        self.outline.append(out)
+        posiciones = [(500, 350, 200, 200), (700, 300, 200, 100), (300, 300, 200, 100), (300, 400, 200, 100),
+                      (700, 400, 200, 100)]
+        for pos in posiciones:
+            self.rect_list.append(Rectangle(*pos, self.color_transparente))
+            self.outline.append(Out_line(*pos, arcade.color.BLACK, 5))
         #variables usadas para la lógica del juego
         #jugador
         self.eleccion_jug = None
@@ -164,63 +145,26 @@ class MyGame(arcade.Window):
 
 
     def on_mouse_press(self, x, y, button, modifiers):#función que detecta los clicks y ejecuta funciones varias
-
-        if self.turno_jug:
-
-            #Definir los límites del área de detección (rectángulo en este caso)
-            rect_x1,rect_y1,rect_width1,rect_height1= 500,350,200,200
-            rect_x2, rect_y2, rect_width2, rect_height2 = 700, 300, 200, 100
-            rect_x3, rect_y3, rect_width3, rect_height3 = 300, 300, 200, 100
-            rect_x4, rect_y4, rect_width4, rect_height4 = 300, 400, 200, 100
-            rect_x5, rect_y5, rect_width5, rect_height5 = 700, 400, 200, 100
-
-            # Verificar si el clic ocurrió dentro del rectángulo
-            if (rect_x1 - rect_width1 / 2) <= x <= (rect_x1 + rect_width1 / 2) and \
-               (rect_y1 - rect_height1 / 2) <= y <= (rect_y1 + rect_height1 / 2) :
-                self.eleccion_jug=2
-                self.posicion_jug=None
-                self.dibujar_rectangulo = False
-                self.turno_jug = False
-
-
-            elif (rect_x2 - rect_width2 / 2) <= x <= (rect_x2 + rect_width2 / 2) and \
-                 (rect_y2 - rect_height2 / 2) <= y <= (rect_y2 + rect_height2 / 2) :
-                self.eleccion_jug = 3
-                self.posicion_jug=2
-                self.dibujar_rectangulo = False
-                self.turno_jug = False
-
-
-            elif (rect_x3 - rect_width3 / 2) <= x <= (rect_x3 + rect_width3 / 2) and \
-                 (rect_y3 - rect_height3 / 2) <= y <= (rect_y3 + rect_height3 / 2) :
-                self.eleccion_jug = 1
-                self.posicion_jug=2
-                self.dibujar_rectangulo = False
-                self.turno_jug = False
-
-
-            elif (rect_x4 - rect_width4 / 2) <= x <= (rect_x4 + rect_width4 / 2) and \
-                 (rect_y4 - rect_height4 / 2) <= y <= (rect_y4 + rect_height4 / 2) :
-                self.eleccion_jug = 1
-                self.posicion_jug=1
-                self.dibujar_rectangulo = False
-                self.turno_jug = False
-
-
-            elif (rect_x5 - rect_width5 / 2) <= x <= (rect_x5 + rect_width5 / 2) and \
-                 (rect_y5 - rect_height5 / 2) <= y <= (rect_y5 + rect_height5 / 2):
-                self.eleccion_jug = 3
-                self.posicion_jug = 1
-                self.dibujar_rectangulo = False
-                self.turno_jug=False
-            #conteo del número de clicks dados
-            self.clicks+=1
-
-
-
-        #bloquear el clickeo para no registrar más entradas hasta que se permita
-        elif not self.turno_jug:
+        # bloquear el clickeo para no registrar más entradas hasta que se permita
+        if not self.turno_jug:
             return
+
+            # Definir posiciones de rectángulos
+        opciones = [(500, 350, 200, 200, 2, None), (700, 300, 200, 100, 3, 2),
+                    (300, 300, 200, 100, 1, 2), (300, 400, 200, 100, 1, 1),
+                    (700, 400, 200, 100, 3, 1)]
+
+        for rx, ry, rw, rh, eleccion, posicion in opciones:
+            if (rx - rw / 2) <= x <= (rx + rw / 2) and (ry - rh / 2) <= y <= (ry + rh / 2):
+                self.eleccion_jug = eleccion
+                self.posicion_jug = posicion
+                self.dibujar_rectangulo = False
+                self.turno_jug = False
+                break
+
+
+        self.clicks += 1
+
         #comienzo de la lógica de la IA
         if not self.turno_IA and self.clicks%2 != 0:
             arcade.schedule(self.bot_action_keeper,0)
