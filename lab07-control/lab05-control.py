@@ -24,42 +24,42 @@ class Plane:
 
     def draw(self):
         # Se define el centro original del dibujo (centro del fuselaje) para reajustarlo.
-        center_x = 300
-        center_y = 200
+        center_x = 150
+        center_y = 100
         xp = self.position_x
         yp = self.position_y
 
         # Ala principal (se reubica restando el centro)
         arcade.draw_polygon_filled([
-            (300 + xp - center_x, 210 + yp - center_y),
-            (260 + xp - center_x, 260 + yp - center_y),
-            (340 + xp - center_x, 210 + yp - center_y)
+            (150 + xp - center_x, 105 + yp - center_y),
+            (130 + xp - center_x, 130 + yp - center_y),
+            (170 + xp - center_x, 105 + yp - center_y)
         ], arcade.color.DARK_GRAY)
 
         # Fuselaje (elipse), centrado en (xp, yp)
-        arcade.draw_ellipse_filled(300 + xp - center_x, 200 + yp - center_y, 200, 50, arcade.color.LIGHT_GRAY)
+        arcade.draw_ellipse_filled(150 + xp - center_x, 100 + yp - center_y, 100, 25, arcade.color.LIGHT_GRAY)
         # Cabina
-        arcade.draw_ellipse_filled(360 + xp - center_x, 210 + yp - center_y, 40, 20, arcade.color.LIGHT_BLUE)
+        arcade.draw_ellipse_filled(180 + xp - center_x, 105 + yp - center_y, 20, 10, arcade.color.LIGHT_BLUE)
         # Nariz
-        arcade.draw_triangle_filled(430 + xp - center_x, 200 + yp - center_y,
-                                      380 + xp - center_x, 215 + yp - center_y,
-                                      380 + xp - center_x, 185 + yp - center_y,
+        arcade.draw_triangle_filled(210 + xp - center_x, 100 + yp - center_y,
+                                      190 + xp - center_x, 107 + yp - center_y,
+                                      190 + xp - center_x, 92 + yp - center_y,
                                       arcade.color.LIGHT_GRAY)
         # Alerón vertical (cola)
-        arcade.draw_triangle_filled(300 + xp - center_x, 200 + yp - center_y,
-                                      180 + xp - center_x, 240 + yp - center_y,
-                                      200 + xp - center_x, 200 + yp - center_y,
+        arcade.draw_triangle_filled(150 + xp - center_x, 100 + yp - center_y,
+                                      90 + xp - center_x, 120 + yp - center_y,
+                                      100 + xp - center_x, 100 + yp - center_y,
                                       arcade.color.LIGHT_GRAY)
         # Alerón horizontal (estabilizador trasero)
-        arcade.draw_triangle_filled(220 + xp - center_x, 200 + yp - center_y,
-                                      210 + xp - center_x, 190 + yp - center_y,
-                                      210 + xp - center_x, 210 + yp - center_y,
+        arcade.draw_triangle_filled(110 + xp - center_x, 100 + yp - center_y,
+                                      105 + xp - center_x, 95 + yp - center_y,
+                                      105 + xp - center_x, 105 + yp - center_y,
                                       arcade.color.LIGHT_GRAY)
         # Otra ala, inferior
         arcade.draw_polygon_filled([
-            (285 + xp - center_x, 200 + yp - center_y),
-            (220 + xp - center_x, 160 + yp - center_y),
-            (320 + xp - center_x, 200 + yp - center_y)
+            (142 + xp - center_x, 100 + yp - center_y),
+            (110 + xp - center_x, 80 + yp - center_y),
+            (160 + xp - center_x, 100 + yp - center_y)
         ], arcade.color.DARK_GRAY)
 
 
@@ -72,6 +72,7 @@ class MyGame(arcade.Window):
         arcade.set_background_color(arcade.color.ELECTRIC_BLUE)
         # Inicializamos el avión en el centro de la ventana.
         self.plane = Plane(width // 2, height // 2, arcade.color.GOLD)
+
 
     def on_draw(self):
         self.clear()
@@ -109,6 +110,12 @@ class MyGame(arcade.Window):
                 self.plane.position_y = 800
             while self.plane.position_y > 800:
                 self.plane.position_y = -100
+
+    def get_bounding_box(self):
+        width = 100  # Aproximado al tamaño del fuselaje
+        height = 25  # Aproximado al fuselaje
+        return (self.position_x - width // 2, self.position_y - height // 2,
+                self.position_x + width // 2, self.position_y + height // 2)
 
 
 def main():
