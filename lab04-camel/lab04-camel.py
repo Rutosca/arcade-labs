@@ -1,10 +1,9 @@
 import arcade
 from random import *
 
-
-
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 700
+
 class Rectangle:#clase para los rectángulos
     def __init__(self,rect_x,rect_y,rect_width,rect_height,color):
         self.rect_x,self.rect_y,self.rect_width,self.rect_height,self.color=rect_x,rect_y,rect_width,rect_height,color
@@ -96,6 +95,8 @@ class MyGame(arcade.Window):
         if not self.turno_jug:
             return
 
+        valid_click = False
+
             # Definir posiciones de rectángulos
         opciones = [(500, 350, 200, 200, 2, None), (700, 300, 200, 100, 3, 2),
                     (300, 300, 200, 100, 1, 2), (300, 400, 200, 100, 1, 1),
@@ -107,9 +108,15 @@ class MyGame(arcade.Window):
                 self.posicion_jug = posicion
                 self.dibujar_rectangulo = False
                 self.turno_jug = False
+                valid_click = True
+                print(self.eleccion_jug,self.posicion_jug)
                 break
 
-        self.clicks += 1
+
+        if not valid_click:
+            return
+        else:
+            self.clicks += 1
 
         #comienzo de la lógica de la IA
         if not self.turno_IA and self.clicks%2 != 0:
